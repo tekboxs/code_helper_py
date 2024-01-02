@@ -10,6 +10,8 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from dotenv import load_dotenv
+# from cogs.role_remove import RemoveRolesCog
+from cogs.roles import MealDropdownView, ProgrammingRoles 
 
 from database import DatabaseManager
 
@@ -196,6 +198,9 @@ class DiscordBot(commands.Bot):
         await self.load_cogs()
         self.status_task.start()
         self.messages_task.start()
+         
+        
+        
         self.database = DatabaseManager(
             connection=await aiosqlite.connect(
                 f"{os.path.realpath(os.path.dirname(__file__))}/database/database.db"
