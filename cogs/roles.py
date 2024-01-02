@@ -1,55 +1,33 @@
-
-
 import json
 import os
 from discord.ext import commands
 from discord.ext.commands import Context
 import discord
-from discord import Colour, SelectOption, Interaction
+from discord import SelectOption, Interaction
+from views.button import MealButtonView
+from views.dropdown import MealDropdownView
 
-
-def chunk_list(lst, chunk_size):
-    for i in range(0, len(lst), chunk_size):
-        yield lst[i:i + chunk_size]
+def get_roles_list() -> list[str]:
+    json_file_path = fr"{os.path.realpath(os.path.dirname(__file__))}/role_config.json"
+    try:
+        with open(json_file_path, encoding="utf8") as file:
+            roles_list = json.load(file)['roles']
+        return roles_list
+    except FileNotFoundError:
+        print(f"Arquivo JSON não encontrado em {json_file_path}")
+        return []
 
 
 def getRolesOptions() -> list[SelectOption]:
-    role_config = {}
-    config_file_path = fr"{os.path.realpath(os.path.dirname(__file__))}/role_config.json"
-    with open(config_file_path, encoding="utf8") as file:
-        role_config = json.load(file)
+    role_config = get_roles_list()
 
-    role_list = [SelectOption(label=item['label'], emoji=item['emoji'])
-                 for item in role_config['roles']]
+    role_select_list = [SelectOption(label=item['label'], emoji=item['emoji'])
+                        for item in role_config]
 
-    return role_list
+    return role_select_list
 
-
-class RoleDropdownView(discord.ui.View):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.roles = getRolesOptions()
-        self.roles_chunks = list(chunk_list(self.roles, 25))
-        self.current_chunk = 0
-        self.timeout = None
-        for i in range(0, len(self.roles_chunks)):
-            self.add_dropdown(i)
-
-    def add_dropdown(self, chunk_index: int):
-        options = self.roles_chunks[chunk_index]
-        dropdown = discord.ui.Select(
-            placeholder=f"Menu de Seleção {chunk_index}",
-            min_values=1,
-            max_values=1,
-            options=options,
-            custom_id=f'role_drop:{chunk_index}'
-            )
-
-        dropdown.callback = self.select_callback
-        self.add_item(dropdown)
-
-    async def select_callback(self, interaction: Interaction):
+class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
+    async def on_dropdown_select(self, interaction: Interaction):
         guild = interaction.guild
         role_name = f"{interaction.data['values'][0]} Dev"
         role = discord.utils.get(guild.roles, name=role_name)
@@ -69,21 +47,48 @@ class RoleDropdownView(discord.ui.View):
             await interaction.response.send_message(f"Cargo {role_name} atribuído com sucesso!", ephemeral=True)
         else:
             await interaction.response.send_message("Você já possui esse cargo!", ephemeral=True)
+    async def on_remove_button(self, interaction: discord.Interaction):
+        roles_list = get_roles_list()
+        member = interaction.user
 
+        if roles_list and member:
+            roles_to_remove = [f"{role['label']} Dev" for role in roles_list]
+            roles_to_remove = [discord.utils.get(
+                interaction.guild.roles, name=role_name) for role_name in roles_to_remove]
+            roles_to_remove = [
+                role for role in roles_to_remove if role and role in member.roles]
 
-class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
-    @commands.hybrid_command(
-        name="choose_role",
-        description="Criar menu de cargos.",
-    )
+            if roles_to_remove:
+                await member.remove_roles(*roles_to_remove)
+                await interaction.response.send_message("Cargos removidos com sucesso!", ephemeral=True)
+            else:
+                await interaction.response.send_message("Você não possui nenhum dos cargos a serem removidos.", ephemeral=True)
+        else:
+            await interaction.response.send_message("Erro ao processar a ação.", ephemeral=True)
+    
+    def setup_view(self) -> discord.ui.View:
+        role_view = MealDropdownView(
+            custom_id_prefix='remove_role_btn',
+            options=getRolesOptions(),
+            callback=self.on_dropdown_select
+        )
+
+        role_view.add_item(MealButtonView(callback=self.on_remove_button, label='Remover'))
+        return role_view
+
+    @commands.hybrid_command(name="choose_role",description="Criar menu de cargos.")
     @commands.has_role('Manager')
     async def choose_role(self, context: Context) -> None:
+        
         await context.channel.send(
             "Escolha as ferramentas que melhor representam suas habilidades",
-            view=RoleDropdownView(),
+            view=self.setup_view(),
         )
         await context.send('Menu criado com sucesso ;)', ephemeral=True)
 
 
-async def setup(bot) -> None:
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(ProgrammingRoles())
+   
+    bot.add_view(ProgrammingRoles().setup_view())
+

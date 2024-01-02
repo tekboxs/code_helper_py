@@ -4,6 +4,11 @@ from discord.ext import commands
 from discord.ui import Select
 import json
 
+class MealDropdownView(discord.ui.View):
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+
+
 class DropdownCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
