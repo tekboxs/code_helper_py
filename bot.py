@@ -211,8 +211,12 @@ class DiscordBot(commands.Bot):
 
         if message.author == self.user or message.author.bot:
             return
+        if message.author.id == 310101096783937536:
+            if random.randint(1, 100) > 99:
+                await message.add_reaction('\U0001F95B')
+            
         if message.author.id == config['tekbox_id'] or message.author.id == 1110622841256292452:
-            if random.randint(1, 10) > 7:
+            if random.randint(1, 10) > 9:
                 await message.add_reaction('<:fuba:1129443906753396847>')
 
         await self.process_commands(message)
