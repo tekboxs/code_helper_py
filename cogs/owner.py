@@ -191,13 +191,10 @@ class Owner(commands.Cog, name="owner"):
     @app_commands.describe(message="The message that should be repeated by the bot")
     @commands.is_owner()
     async def say(self, context: Context, *, message: str) -> None:
-        """
-        The bot will say anything you want.
+        canal = context.channel
+        mensagem_enviada = await canal.send(message)
 
-        :param context: The hybrid command context.
-        :param message: The message that should be repeated by the bot.
-        """
-        await context.send(message)
+        await context.message.delete()
 
     @commands.hybrid_command(
         name="embed",
