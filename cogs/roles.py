@@ -47,6 +47,7 @@ class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
             await interaction.response.send_message(f"Cargo {role_name} atribuído com sucesso!", ephemeral=True)
         else:
             await interaction.response.send_message("Você já possui esse cargo!", ephemeral=True)
+
     async def on_remove_button(self, interaction: discord.Interaction):
         roles_list = get_roles_list()
         member = interaction.user
@@ -65,7 +66,7 @@ class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
                 await interaction.response.send_message("Você não possui nenhum dos cargos a serem removidos.", ephemeral=True)
         else:
             await interaction.response.send_message("Erro ao processar a ação.", ephemeral=True)
-    
+
     def setup_view(self) -> discord.ui.View:
         role_view = MealDropdownView(
             custom_id_prefix='remove_role_btn',
