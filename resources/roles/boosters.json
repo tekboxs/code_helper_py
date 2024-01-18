@@ -1,3 +1,5 @@
 {
-  "roles": []
+  "roles": [
+    {"name": "example role", "color": "#ffffff"}
+  ]
 }
