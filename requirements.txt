@@ -1,4 +1,5 @@
-aiohttp
-aiosqlite
+aiohttp~=3.9.1
+aiosqlite~=0.19.0
 discord.py
-python-dotenv
+python-dotenv~=1.0.0
+googletrans~=4.0.0-rc1

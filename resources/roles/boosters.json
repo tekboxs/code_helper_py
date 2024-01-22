@@ -1,0 +1,33 @@
+{
+  "roles": [
+    {"name": "Hot Pink", "color": "#FC0FC0", "emoji": "💖"},
+    {"name": "White", "color": "#FFFFFF", "emoji": "⚪"},
+    {"name": "Blue Willow", "color": "#4A90E2", "emoji": "📘"},
+    {"name": "Dark Olive Green", "color": "#556B2F", "emoji": "🌲"},
+    {"name": "Medium Purple", "color": "#9370DB", "emoji": "🍇"},
+    {"name": "Dark Orange", "color": "#FF8C00", "emoji": "🧡"},
+    {"name": "Light Coral", "color": "#F08080", "emoji": "🌺"},
+    {"name": "Medium Turquoise", "color": "#48D1CC", "emoji": "🐬"},
+    {"name": "Dark Violet", "color": "#9400D3", "emoji": "🌌"},
+    {"name": "Light Salmon", "color": "#FFA07A", "emoji": "🍣"},
+    {"name": "Crimson", "color": "#DC143C", "emoji": "\uD83D\uDD34"}
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
