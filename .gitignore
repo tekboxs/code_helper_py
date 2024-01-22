@@ -1,3 +1,5 @@
 /.env
 /discord.log
 /venv
+**/__pycache__
+/database/database.db

@@ -1,4 +1,4 @@
-from typing import Any, Coroutine
+from typing import Callable, Any, Coroutine
 import discord
 
 
@@ -19,7 +19,7 @@ class MealDropdownView(discord.ui.View):
     def __init__(self,
                  custom_id_prefix: str,
                  options: list[discord.SelectOption],
-                 callback: Coroutine[Any, Any, None],
+                 callback: Callable[[discord.Interaction], Coroutine[Any, Any, None]],
                  persistent=True,
                  max_values=1,
                  min_values=1,

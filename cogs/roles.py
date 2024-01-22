@@ -29,7 +29,7 @@ def get_roles_options() -> list[SelectOption]:
 
 
 class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
-    async def on_dropdown_select(self, interaction: Interaction):
+    async def on_dropdown_select(self, interaction: Interaction) -> None:
         guild = interaction.guild
         role_name = f"{interaction.data['values'][0]} Dev"
         role = discord.utils.get(guild.roles, name=role_name)
