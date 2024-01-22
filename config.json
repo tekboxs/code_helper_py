@@ -1,5 +1,11 @@
 {
   "prefix": "/",
   "invite_link": "https://discord.gg/bW9VcPxv",
-  "tekbox_id": 433742288150200331
+  "tekbox": 433742288150200331,
+  "codehelp": {
+    "geral": 1094667212712841306
+  },
+  "interno": {
+    "geral": 1196438197543116855
+  }
 }

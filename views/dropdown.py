@@ -1,25 +1,25 @@
-
-from typing import Any, Coroutine
+from typing import Callable, Any, Coroutine
 import discord
 
 
 def chunk_list(lst, chunk_size):
     for i in range(0, len(lst), chunk_size):
         yield lst[i:i + chunk_size]
-        
+
+
 class MealDropdownView(discord.ui.View):
-    '''
+    """
     Create a generic corn meal dropdown view
 
     Parameters
     -----------
     callback > should have argument interaction: Interaction
-    '''
+    """
 
     def __init__(self,
                  custom_id_prefix: str,
                  options: list[discord.SelectOption],
-                 callback: Coroutine[Any, Any, None],
+                 callback: Callable[[discord.Interaction], Coroutine[Any, Any, None]],
                  persistent=True,
                  max_values=1,
                  min_values=1,
