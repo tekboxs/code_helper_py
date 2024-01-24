@@ -21,6 +21,11 @@ class TicketCog(commands.Cog, name="ticket"):
 
     @staticmethod
     async def ticket_on_close(interaction: Interaction) -> None:
+        date = datetime.now()
+        date_format = "%d-%m-%Y %H:%M:%S"
+        formated_date = date.strftime(date_format)
+        ticket_closed_name = f"(closed) {interaction.user.name} - {interaction.user.id} - {formated_date}"
+        await interaction.channel.edit(name=ticket_closed_name, archived=True)
         await interaction.channel.remove_user(interaction.user)
 
     @staticmethod
