@@ -15,9 +15,36 @@ from cogs.roles import MealDropdownView, ProgrammingRoles
 from configs import Configs
 from googletrans import Translator
 from database import DatabaseManager
+import os
+import subprocess
+import spacy
+from spacy.util import is_package
 
 intents = discord.Intents.all()
 
+modelo_linguagem = 'pt_core_news_lg'
+
+# Verifica se o modelo já está instalado
+if is_package(modelo_linguagem):
+    print(f'O modelo {modelo_linguagem} já está instalado.')
+else:
+    # Executa o comando de download usando subprocess
+    comando_download = f'python -m spacy download {modelo_linguagem}'
+    resultado = subprocess.run(comando_download, shell=True, check=True, capture_output=True, text=True)
+
+    # Verifica se o download foi bem-sucedido
+    if resultado.returncode == 0:
+        print(f'O modelo {modelo_linguagem} foi baixado com sucesso.')
+    else:
+        print(f'Ocorreu um erro durante o download: {resultado.stderr}')
+
+# Carrega o modelo (pode ser feito independentemente do download)
+nlp = spacy.load(modelo_linguagem)
+
+messages_data = {}
+
+# Dicionário para armazenar respostas aprendidas
+learned_responses = {'positive': {}, 'negative': {}}
 
 class LoggingFormatter(logging.Formatter):
     # Colors
@@ -135,6 +162,15 @@ class DiscordBot(commands.Bot):
                     else:
                         logger.warning(f'cant find {channel_id}')
 
+    @tasks.loop(hours=24)
+    async def message_task(self) -> None:
+        user_id = 698266301944037425
+        member = self.get_user(user_id) or await self.fetch_user(user_id)
+        if member:
+            await member.send('lucas')
+        else:
+            print('cant send message')
+
     @tasks.loop(minutes=3.0)
     async def status_task(self) -> None:
 
@@ -162,7 +198,7 @@ class DiscordBot(commands.Bot):
         await self.load_cogs()
         self.status_task.start()
         self.send_daily_quote.start()
-
+        self.message_task.start()
         self.database = DatabaseManager(
             connection=await aiosqlite.connect(
                 f"{os.path.realpath(os.path.dirname(__file__))}/database/database.db"
@@ -182,9 +218,10 @@ class DiscordBot(commands.Bot):
             retry_after = mencao_cooldown.get_bucket(message).update_rate_limit()
             if retry_after:
                 return
-            canal = message.channel
-            responses = ['Que passa?', 'tranquilo?', 'aqui que me chamaram?', 'tava dormindo pow >:(']
-            await canal.send(f"Oii, {message.author.mention} {responses[random.randint(0,len(responses)-1)]}")
+
+            responses = ['Aqui que chamaram o pai?', 'Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
+                         'Mas e o bolo de fubá?', 'Quero dormir doidão', 'Me dá bolo de fubá']
+            await message.reply(responses[random.randint(0, len(responses) - 1)])
 
         await self.process_commands(message)
 
@@ -212,10 +249,7 @@ class DiscordBot(commands.Bot):
             )
             await context.send(embed=embed)
         elif isinstance(error, commands.NotOwner):
-            embed = discord.Embed(
-                description="Some daqui!", color=0xE02B2B
-            )
-            await context.send(embed=embed)
+            await context.send(content="Some daqui!", ephemeral=True)
             if context.guild:
                 self.logger.warning(
                     f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot."
@@ -225,11 +259,7 @@ class DiscordBot(commands.Bot):
                     f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot."
                 )
         elif isinstance(error, commands.MissingPermissions):
-            embed = discord.Embed(
-                description="Você não tem permissão pra isso, suma.`",
-                color=0xE02B2B)
-
-            await context.send(embed=embed)
+            await context.send(content="Você não tem permissão pra isso, suma.", ephemeral=True)
         elif isinstance(error, commands.BotMissingPermissions):
             embed = discord.Embed(
                 description="Não posso fazer isso`",
