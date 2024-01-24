@@ -1,4 +1,5 @@
 import discord
+from datetime import datetime
 from discord import Interaction
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -48,7 +49,7 @@ class TicketCog(commands.Cog, name="ticket"):
                     ticket = thread
                 else:
                     await interaction.response.send_message(
-                        content=f"Você já tem um atendimento em andamento!",
+                        content=f"Você já tem um atendimento em andamento! {thread.mention}",
                         ephemeral=True)
                     return
 
@@ -62,12 +63,19 @@ class TicketCog(commands.Cog, name="ticket"):
                     return
 
         if ticket is not None:
-            await ticket.edit(archived=False, locked=False)
-            await ticket.edit(name=f"{interaction.user.name} - {interaction.user.id}",
+            date = datetime.now()
+            date_format = "%d-%m-%Y %H:%M:%S"
+            formated_date = date.strftime(date_format)
+            await ticket.edit(name=f"{interaction.user.name} - {interaction.user.id} - {formated_date}",
+                              archived=False,
+                              locked=False,
                               auto_archive_duration=10080,
                               invitable=False)
         else:
-            ticket = await interaction.channel.create_thread(name=f"{interaction.user.name} - {interaction.user.id}",
+            date = datetime.now()
+            date_format = "%d-%m-%Y %H:%M:%S"
+            formated_date = date.strftime(date_format)
+            ticket = await interaction.channel.create_thread(name=f"{interaction.user.name} - {interaction.user.id} - {formated_date}",
                                                              auto_archive_duration=10080)
             await ticket.edit(invitable=False)
 
@@ -75,7 +83,8 @@ class TicketCog(commands.Cog, name="ticket"):
 
         await ticket.send(
             f"📩  **|** {interaction.user.mention} ticket criado! Envie todas as informações possíveis sobre seu caso e "
-            f"aguarde até que um membro da equipe responda.",
+            f"aguarde até que um membro da equipe responda."
+            f"\n\n<@&1107752147346530444>\n<@&1097991717141102744>",
             view=TicketCog.setup_close_view()
         )
 
