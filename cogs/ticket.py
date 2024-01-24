@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from datetime import datetime
 from discord import Interaction
 from discord.ext import commands
@@ -22,12 +23,8 @@ class TicketCog(commands.Cog, name="ticket"):
 
     @staticmethod
     async def ticket_on_close(interaction: Interaction) -> None:
-        date = datetime.now()
-        date_format = "%d-%m-%Y %H:%M:%S"
-        formated_date = date.strftime(date_format)
-        ticket_closed_name = f"(closed) {interaction.user.name} - {interaction.user.id} - {formated_date}"
-        await interaction.channel.edit(name=ticket_closed_name, archived=True)
         await interaction.channel.remove_user(interaction.user)
+        await interaction.channel.edit(archived=True)
 
     @staticmethod
     def setup_close_view() -> View:
@@ -63,19 +60,12 @@ class TicketCog(commands.Cog, name="ticket"):
                     return
 
         if ticket is not None:
-            date = datetime.now()
-            date_format = "%d-%m-%Y %H:%M:%S"
-            formated_date = date.strftime(date_format)
-            await ticket.edit(name=f"{interaction.user.name} - {interaction.user.id} - {formated_date}",
-                              archived=False,
+            await ticket.edit(archived=False,
                               locked=False,
                               auto_archive_duration=10080,
                               invitable=False)
         else:
-            date = datetime.now()
-            date_format = "%d-%m-%Y %H:%M:%S"
-            formated_date = date.strftime(date_format)
-            ticket = await interaction.channel.create_thread(name=f"{interaction.user.name} - {interaction.user.id} - {formated_date}",
+            ticket = await interaction.channel.create_thread(name=f"{interaction.user.name} - {interaction.user.id}",
                                                              auto_archive_duration=10080)
             await ticket.edit(invitable=False)
 
