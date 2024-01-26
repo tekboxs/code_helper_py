@@ -1,9 +1,7 @@
-import json
 import logging
 import os
 import platform
 import random
-import sys
 import aiohttp
 
 import aiosqlite
@@ -11,7 +9,8 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from dotenv import load_dotenv
-from cogs.roles import MealDropdownView, ProgrammingRoles
+
+from utils.exp import XpCog
 from configs import Configs
 from googletrans import Translator
 from database import DatabaseManager
@@ -185,7 +184,7 @@ class DiscordBot(commands.Bot):
             canal = message.channel
             responses = ['Que passa?', 'tranquilo?', 'aqui que me chamaram?', 'tava dormindo pow >:(']
             await canal.send(f"Oii, {message.author.mention} {responses[random.randint(0,len(responses)-1)]}")
-
+        await XpCog(self).compute_xp(message)
         await self.process_commands(message)
 
     async def on_command_completion(self, context: Context) -> None:
