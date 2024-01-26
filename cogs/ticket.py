@@ -13,7 +13,7 @@ class TicketCog(commands.Cog, name="ticket"):
     @commands.hybrid_command(name="tkt-i", description="Create buttons")
     @commands.has_role('Manager')
     async def ticket_interactions(self, context: Context) -> None:
-        await context.send('Entre em contato com a moderação', view=TicketCog.setup_view())
+        await context.channel.send('Abra um Ticket para entrar em contato com a moderação', view=TicketCog.setup_view())
 
     @staticmethod
     def setup_view() -> View:
@@ -37,9 +37,22 @@ class TicketCog(commands.Cog, name="ticket"):
         return remove_button_view
 
     @staticmethod
-    async def ticket_on_click(interaction: Interaction) -> None:
+    async def ticket_on_click(interaction: Interaction):
+        confirmation_view = View()
+        confirmation_view.add_item( MealButtonView(
+            TicketCog.ticket_on_confirm,
+            label='Continuar',
+            style=discord.ButtonStyle.red,
+            custom_id='tkt-continue'))
+        await interaction.response.send_message(content='Tem certeza? Abusar da criação de Tickets resultará em punições.',
+                                                       view=confirmation_view,
+                                                       ephemeral=True)
+
+    @staticmethod
+    async def ticket_on_confirm(interaction: Interaction) -> None:
 
         ticket = None
+
         for thread in interaction.channel.threads:
             if f"{interaction.user.id}" in thread.name:
                 if thread.archived:
@@ -74,7 +87,7 @@ class TicketCog(commands.Cog, name="ticket"):
         await ticket.send(
             f"📩  **|** {interaction.user.mention} ticket criado! Envie todas as informações possíveis sobre seu caso e "
             f"aguarde até que um membro da equipe responda."
-            f"\n\n<@&1107752147346530444>\n<@&1097991717141102744>",
+            f"\n\n||<@&1107752147346530444> <@&1097991717141102744>||",
             view=TicketCog.setup_close_view()
         )
 

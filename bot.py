@@ -22,24 +22,24 @@ from spacy.util import is_package
 
 intents = discord.Intents.all()
 
-modelo_linguagem = 'pt_core_news_lg'
+# modelo_linguagem = 'pt_core_news_lg'
 
-# Verifica se o modelo já está instalado
-if is_package(modelo_linguagem):
-    print(f'O modelo {modelo_linguagem} já está instalado.')
-else:
-    # Executa o comando de download usando subprocess
-    comando_download = f'python -m spacy download {modelo_linguagem}'
-    resultado = subprocess.run(comando_download, shell=True, check=True, capture_output=True, text=True)
+# # Verifica se o modelo já está instalado
+# if is_package(modelo_linguagem):
+#     print(f'O modelo {modelo_linguagem} já está instalado.')
+# else:
+#     # Executa o comando de download usando subprocess
+#     comando_download = f'python -m spacy download {modelo_linguagem}'
+#     resultado = subprocess.run(comando_download, shell=True, check=True, capture_output=True, text=True)
 
-    # Verifica se o download foi bem-sucedido
-    if resultado.returncode == 0:
-        print(f'O modelo {modelo_linguagem} foi baixado com sucesso.')
-    else:
-        print(f'Ocorreu um erro durante o download: {resultado.stderr}')
+#     # Verifica se o download foi bem-sucedido
+#     if resultado.returncode == 0:
+#         print(f'O modelo {modelo_linguagem} foi baixado com sucesso.')
+#     else:
+#         print(f'Ocorreu um erro durante o download: {resultado.stderr}')
 
-# Carrega o modelo (pode ser feito independentemente do download)
-nlp = spacy.load(modelo_linguagem)
+# # Carrega o modelo (pode ser feito independentemente do download)
+# nlp = spacy.load(modelo_linguagem)
 
 messages_data = {}
 
@@ -162,20 +162,15 @@ class DiscordBot(commands.Bot):
                     else:
                         logger.warning(f'cant find {channel_id}')
 
-    @tasks.loop(hours=24)
-    async def message_task(self) -> None:
-        user_id = 698266301944037425
-        member = self.get_user(user_id) or await self.fetch_user(user_id)
-        if member:
-            await member.send('lucas')
-        else:
-            print('cant send message')
+
 
     @tasks.loop(minutes=3.0)
     async def status_task(self) -> None:
 
         statuses = [
             "com fubá 🌽",
+            "🌽🌽",
+            "🌽 de fubá",
         ]
 
         await self.change_presence(activity=discord.Game(random.choice(statuses)))
@@ -198,7 +193,7 @@ class DiscordBot(commands.Bot):
         await self.load_cogs()
         self.status_task.start()
         self.send_daily_quote.start()
-        self.message_task.start()
+
         self.database = DatabaseManager(
             connection=await aiosqlite.connect(
                 f"{os.path.realpath(os.path.dirname(__file__))}/database/database.db"
