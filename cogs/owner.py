@@ -185,10 +185,9 @@ class Owner(commands.Cog, name="owner"):
     @app_commands.describe(message="The message that should be repeated by the bot")
     @commands.is_owner()
     async def say(self, context: Context, *, message: str) -> None:
-        canal = context.channel
-        mensagem_enviada = await canal.send(message)
-
+        await context.channel.send(message)
         await context.message.delete()
+
 
     @commands.hybrid_command(
         name="embed",

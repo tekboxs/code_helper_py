@@ -14,6 +14,7 @@ class TicketCog(commands.Cog, name="ticket"):
     @commands.has_role('Manager')
     async def ticket_interactions(self, context: Context) -> None:
         await context.channel.send('Abra um Ticket para entrar em contato com a moderação', view=TicketCog.setup_view())
+        return await context.interaction.response.send_message("Ticket interactions created", ephemeral=True)
 
     @staticmethod
     def setup_view() -> View:
@@ -25,6 +26,7 @@ class TicketCog(commands.Cog, name="ticket"):
     async def ticket_on_close(interaction: Interaction) -> None:
         await interaction.channel.remove_user(interaction.user)
         await interaction.channel.edit(archived=True)
+        return await interaction.response.defer()
 
     @staticmethod
     def setup_close_view() -> View:
@@ -39,14 +41,15 @@ class TicketCog(commands.Cog, name="ticket"):
     @staticmethod
     async def ticket_on_click(interaction: Interaction):
         confirmation_view = View()
-        confirmation_view.add_item( MealButtonView(
+        confirmation_view.add_item(MealButtonView(
             TicketCog.ticket_on_confirm,
             label='Continuar',
             style=discord.ButtonStyle.red,
             custom_id='tkt-continue'))
-        await interaction.response.send_message(content='Tem certeza? Abusar da criação de Tickets resultará em punições.',
-                                                       view=confirmation_view,
-                                                       ephemeral=True)
+        return await interaction.response.send_message(
+            content='Tem certeza? Abusar da criação de Tickets resultará em punições.',
+            view=confirmation_view,
+            ephemeral=True)
 
     @staticmethod
     async def ticket_on_confirm(interaction: Interaction) -> None:

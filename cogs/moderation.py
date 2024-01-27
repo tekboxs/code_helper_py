@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from configs import Configs
 
+
 class Moderacao(commands.Cog, name="moderacao"):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -24,7 +25,7 @@ class Moderacao(commands.Cog, name="moderacao"):
                 embed=discord.Embed(description=f"O novo apelido de **{member}** é **{nickname}**!", color=0xBEBEFE))
         except:
             await context.send(embed=discord.Embed(
-                description="Ocorreu um erro ao tentar alterar o apelido do usuário. Certifique-se de que meu cargo está acima do cargo do usuário que você quer alterar o apelido.",
+                description="Ocorreu um erro ao tentar alterar o apelido do usuário",
                 color=0xE02B2B))
 
     @commands.hybrid_command(name="banir", description="Bane um usuário do servidor.")
@@ -36,7 +37,8 @@ class Moderacao(commands.Cog, name="moderacao"):
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
         try:
             if member.guild_permissions.manage_messages:
-                owner = context.guild.get_member(Configs().users.tekbox) or await context.guild.fetch_member(Configs().users.tekbox)
+                owner = context.guild.get_member(Configs().users.tekbox) or await context.guild.fetch_member(
+                    Configs().users.tekbox)
 
                 await context.send(
                     content=owner.mention,
@@ -49,7 +51,7 @@ class Moderacao(commands.Cog, name="moderacao"):
                 await member.ban(reason=reason)
         except Exception as e:
             await context.send(embed=discord.Embed(title="Erro!",
-                                                   description=f"{e} Ocorreu um erro ao tentar banir o usuário. Certifique-se de que o ID é um ID existente que pertence a um usuário.",
+                                                   description=f"{e} Ocorreu um erro ao tentar banir o usuário.",
                                                    color=0xE02B2B))
 
     @commands.hybrid_group(name="advertencia", description="Gerencia advertências de um usuário no servidor.")
@@ -58,7 +60,7 @@ class Moderacao(commands.Cog, name="moderacao"):
         # Grupo de comandos para gerenciar advertências de usuários.
         if context.invoked_subcommand is None:
             await context.send(embed=discord.Embed(
-                description="Especifique um subcomando.\n\n**Subcomandos:**\n`adicionar` - Adiciona uma advertência a um usuário.\n`remover` - Remove uma advertência de um usuário.\n`listar` - Lista todas as advertências de um usuário.",
+                description="Especifique um subcomando.",
                 color=0xE02B2B))
 
     @advertencia.command(name="adicionar", description="Adiciona uma advertência a um usuário no servidor.")
@@ -69,7 +71,8 @@ class Moderacao(commands.Cog, name="moderacao"):
                                     reason: str) -> None:
         # Adiciona uma advertência a um usuário.
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
-        total = await self.bot.database.add_warn(user.id, context.guild.id, context.author.id, reason)
+
+        total = await self.bot.database.add_warn(f'{user.name}-{user.id}', context.author.name, reason)
         await context.send(embed=discord.Embed(
             description=f"**{member}** foi advertido por **{context.author}**!\nTotal de advertências: {total}",
             color=0xBEBEFE).add_field(name="Motivo:", value=reason))
@@ -85,7 +88,8 @@ class Moderacao(commands.Cog, name="moderacao"):
     async def advertencia_remover(self, context: Context, user: discord.User, warn_id: int) -> None:
         # Remove uma advertência de um usuário.
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
-        total = await self.bot.database.remove_warn(warn_id, user.id, context.guild.id)
+        total = await self.bot.database.remove_warn(warn_id, f"{user.name}-{user.id}")
+
         await context.send(embed=discord.Embed(
             description=f"Removi a advertência **#{warn_id}** de **{member}**!\nTotal de advertências: {total}",
             color=0xBEBEFE))
@@ -95,10 +99,10 @@ class Moderacao(commands.Cog, name="moderacao"):
     @app_commands.describe(user="O usuário que você deseja obter as advertências.")
     async def advertencia_listar(self, context: Context, user: discord.User) -> None:
         # Mostra as advertências de um usuário.
-        warnings_list = await self.bot.database.get_warnings(user.id, context.guild.id)
+        warnings_list = await self.bot.database.list_warn(f"{user.name}-{user.id}")
         embed = discord.Embed(title=f"Advertências de {user}", color=0xBEBEFE)
         description = "Esse usuário não tem advertências." if len(warnings_list) == 0 else "".join(
-            f"• Advertido por <@{warning[2]}>: **{warning[3]}** (<t:{warning[4]}>) - Warn ID #{warning[5]}\n" for
+            f"• Por {warning['author']}\n**{warning['motivo']}**\n{warning['data']} - ID #{warnings_list.index(warning)}\n\n" for
             warning in warnings_list)
         embed.description = description
         await context.send(embed=embed)
@@ -121,6 +125,14 @@ class Moderacao(commands.Cog, name="moderacao"):
     async def banirremoto(self, context: Context, user_id: str, *, reason: str) -> None:
         # Comando para banir um usuário remotamente.
         try:
+            if member.guild_permissions.manage_messages:
+                owner = context.guild.get_member(Configs().users.tekbox) or await context.guild.fetch_member(
+                    Configs().users.tekbox)
+
+                await context.send(
+                    content=owner.mention,
+                    embed=discord.Embed(description=f"{context.author} tentou banir {member}!", color=0xE02B2B))
+                return
             await self.bot.http.ban(user_id, context.guild.id, reason=reason)
             user = self.bot.get_user(int(user_id)) or await self.bot.fetch_user(int(user_id))
             await context.send(

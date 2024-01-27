@@ -19,6 +19,18 @@ import os
 import subprocess
 import spacy
 from spacy.util import is_package
+from firebase import FirestoreManager
+
+import firebase_admin
+
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+
+
+
+
+
 
 intents = discord.Intents.all()
 
@@ -45,6 +57,7 @@ messages_data = {}
 
 # Dicionário para armazenar respostas aprendidas
 learned_responses = {'positive': {}, 'negative': {}}
+
 
 class LoggingFormatter(logging.Formatter):
     # Colors
@@ -117,7 +130,7 @@ class DiscordBot(commands.Bot):
         )
 
         self.logger = logger
-        self.database = None
+        self.database: FirestoreManager | None = None
 
     async def load_cogs(self) -> None:
 
@@ -162,8 +175,6 @@ class DiscordBot(commands.Bot):
                     else:
                         logger.warning(f'cant find {channel_id}')
 
-
-
     @tasks.loop(minutes=3.0)
     async def status_task(self) -> None:
 
@@ -194,11 +205,10 @@ class DiscordBot(commands.Bot):
         self.status_task.start()
         self.send_daily_quote.start()
 
-        self.database = DatabaseManager(
-            connection=await aiosqlite.connect(
-                f"{os.path.realpath(os.path.dirname(__file__))}/database/database.db"
-            )
-        )
+        cred = credentials.Certificate(f"{os.path.realpath(os.path.dirname(__file__))}/firebase/key.json")
+        app = firebase_admin.initialize_app(cred)
+        self.database = FirestoreManager(app)
+
 
     async def on_message(self, message: discord.Message) -> None:
 
