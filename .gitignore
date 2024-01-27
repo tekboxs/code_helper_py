@@ -2,4 +2,5 @@
 /discord.log
 /venv
 **/__pycache__
-/database/database.db
+/firebase/key.json
+ 

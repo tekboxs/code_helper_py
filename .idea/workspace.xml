@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d0df030d-caa9-44e2-a94d-c4ba39ca3cd2" name="Changes" comment="feature: creating ticket">
+      <change afterPath="$PROJECT_DIR$/.discloudignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/firebase/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cogs/moderation.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/moderation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cogs/owner.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/owner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cogs/ticket.py" beforeDir="false" afterPath="$PROJECT_DIR$/cogs/ticket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="fuba" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/venv/Lib/site-packages/google/cloud/firestore_v1/_helpers.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/venv/Lib/site-packages/google/cloud/firestore_v1/document.py" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2b3PBJUPp748KpfHw59PxW4QFBY" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/tekbo/projects/code_helper_py/bot.py",
+    "settings.editor.selected.configurable": "background.image.plus"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\tekbo\projects\code_helper_py\firebase" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="bot" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="code_helper_py" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\tekbo\projects\code_helper_py\venv\Scripts\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bot.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d0df030d-caa9-44e2-a94d-c4ba39ca3cd2" name="Changes" comment="" />
+      <created>1705440662721</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1705440662721</updated>
+    </task>
+    <task id="LOCAL-00001" summary="ticket cog">
+      <created>1705607493955</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1705607493955</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fix:booster cog">
+      <created>1705928527207</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705928527207</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feature: creating ticket">
+      <created>1706099177099</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1706099177099</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="389778f5-0ebd-4383-be8e-afc4b68a8ada">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="BEK_SORT_TYPE" value="1" />
+            </State>
+          </value>
+        </entry>
+        <entry key="58068e6c-5c3c-4df3-b030-9acfdc6c0043">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/feature_ticket" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="389778f5-0ebd-4383-be8e-afc4b68a8ada" value="TOOL_WINDOW" />
+        <entry key="58068e6c-5c3c-4df3-b030-9acfdc6c0043" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/feature_ticket" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="ticket cog" />
+    <MESSAGE value="fixup! ticket cog" />
+    <MESSAGE value="fix:booster cog" />
+    <MESSAGE value="feature: creating ticket" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: creating ticket" />
+  </component>
+</project>
