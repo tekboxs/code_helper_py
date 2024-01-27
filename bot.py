@@ -130,7 +130,9 @@ class DiscordBot(commands.Bot):
         )
 
         self.logger = logger
+
         self.database: FirestoreManager | None = None
+
 
     async def load_cogs(self) -> None:
 
@@ -205,10 +207,10 @@ class DiscordBot(commands.Bot):
         self.status_task.start()
         self.send_daily_quote.start()
 
+
         cred = credentials.Certificate(f"{os.path.realpath(os.path.dirname(__file__))}/firebase/key.json")
         app = firebase_admin.initialize_app(cred)
         self.database = FirestoreManager(app)
-
 
     async def on_message(self, message: discord.Message) -> None:
 
@@ -224,9 +226,11 @@ class DiscordBot(commands.Bot):
             if retry_after:
                 return
 
+
             responses = ['Aqui que chamaram o pai?', 'Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
                          'Mas e o bolo de fubá?', 'Quero dormir doidão', 'Me dá bolo de fubá']
             await message.reply(responses[random.randint(0, len(responses) - 1)])
+
 
         await self.process_commands(message)
 
@@ -254,7 +258,9 @@ class DiscordBot(commands.Bot):
             )
             await context.send(embed=embed)
         elif isinstance(error, commands.NotOwner):
+
             await context.send(content="Some daqui!", ephemeral=True)
+
             if context.guild:
                 self.logger.warning(
                     f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot."
@@ -264,7 +270,9 @@ class DiscordBot(commands.Bot):
                     f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot."
                 )
         elif isinstance(error, commands.MissingPermissions):
+
             await context.send(content="Você não tem permissão pra isso, suma.", ephemeral=True)
+
         elif isinstance(error, commands.BotMissingPermissions):
             embed = discord.Embed(
                 description="Não posso fazer isso`",
