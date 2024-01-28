@@ -150,4 +150,3 @@ class TicketCog(commands.Cog, name="ticket"):
 
 async def setup(bot) -> None:
     await bot.add_cog(TicketCog(bot))
-

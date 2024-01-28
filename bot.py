@@ -5,12 +5,16 @@ import platform
 import random
 import sys
 import aiohttp
+import aiohttp
 
 import aiosqlite
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from dotenv import load_dotenv
+from cogs.roles import MealDropdownView, ProgrammingRoles
+from configs import Configs
+from googletrans import Translator
 from cogs.roles import MealDropdownView, ProgrammingRoles
 from configs import Configs
 from googletrans import Translator
@@ -87,6 +91,12 @@ class LoggingFormatter(logging.Formatter):
         current_format = current_format.replace("(levelcolor)", log_color)
         current_format = current_format.replace("(green)", self.green + self.bold)
         formatter = logging.Formatter(current_format, "%Y-%m-%d %H:%M:%S", style="{")
+        current_format = "(black){asctime}(reset) (levelcolor){levelname:<8}(reset) (green){name}(reset) {message}"
+        current_format = current_format.replace("(black)", self.black + self.bold)
+        current_format = current_format.replace("(reset)", self.reset)
+        current_format = current_format.replace("(levelcolor)", log_color)
+        current_format = current_format.replace("(green)", self.green + self.bold)
+        formatter = logging.Formatter(current_format, "%Y-%m-%d %H:%M:%S", style="{")
         return formatter.format(record)
 
 
@@ -99,6 +109,10 @@ console_handler.setFormatter(LoggingFormatter())
 file_handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 file_handler_formatter = logging.Formatter("[{asctime}] [{levelname:<8}] {name}: {message}", "%Y-%m-%d %H:%M:%S",
                                            style="{")
+
+file_handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
+file_handler_formatter = logging.Formatter("[{asctime}] [{levelname:<8}] {name}: {message}", "%Y-%m-%d %H:%M:%S",
+                                           style="{")
 file_handler.setFormatter(file_handler_formatter)
 
 logger.addHandler(console_handler)
@@ -107,16 +121,10 @@ logger.addHandler(file_handler)
 configs = Configs()
 
 
-async def init_db() -> None:
-    async with aiosqlite.connect(
-            f"{os.path.realpath(os.path.dirname(__file__))}/database/database.db"
-    ) as db:
-        with open(
-                f"{os.path.realpath(os.path.dirname(__file__))}/database/schema.sql"
-        ) as file:
-            await db.executescript(file.read())
-        await db.commit()
+ 
+configs = Configs()
 
+ 
 
 mencao_cooldown = commands.CooldownMapping.from_cooldown(1, 120, commands.BucketType.user)
 
@@ -177,6 +185,35 @@ class DiscordBot(commands.Bot):
                     else:
                         logger.warning(f'cant find {channel_id}')
 
+    @tasks.loop(hours=1)
+    async def send_daily_quote(self):
+        channel_id = configs.codehelp.geral
+
+        async with aiohttp.ClientSession() as session:
+            channel = bot.get_channel(channel_id)
+            if not channel:
+                return
+
+            history = [message async for message in channel.history(limit=1)]
+
+            if history and history[0].author == bot.user:
+                return
+
+            async with session.get('https://api.quotable.io/random') as response:
+                if response.status == 200:
+                    quote_data = await response.json()
+
+                    tradutor = Translator()
+                    conteudo_traduzido = tradutor.translate(quote_data['content'], dest='pt').text
+                    autor_traduzido = tradutor.translate(quote_data['author'], dest='pt').text
+
+                    message = f"{conteudo_traduzido}\n_{autor_traduzido}_"
+
+                    if channel:
+                        await channel.send(message)
+                    else:
+                        logger.warning(f'cant find {channel_id}')
+
     @tasks.loop(minutes=3.0)
     async def status_task(self) -> None:
 
@@ -202,7 +239,7 @@ class DiscordBot(commands.Bot):
             f"Running on: {platform.system()} {platform.release()} ({os.name})"
         )
         self.logger.info("-------------------")
-        await init_db()
+        
         await self.load_cogs()
         self.status_task.start()
         self.send_daily_quote.start()
@@ -241,6 +278,7 @@ class DiscordBot(commands.Bot):
         if context.guild is not None:
             self.logger.info(
                 f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id}) "
+                f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id}) "
             )
         else:
             self.logger.info(
@@ -275,6 +313,7 @@ class DiscordBot(commands.Bot):
 
         elif isinstance(error, commands.BotMissingPermissions):
             embed = discord.Embed(
+                description="Não posso fazer isso`",
                 description="Não posso fazer isso`",
                 color=0xE02B2B,
             )
