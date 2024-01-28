@@ -3,3 +3,5 @@ aiosqlite~=0.19.0
 discord.py
 python-dotenv~=1.0.0
 googletrans~=4.0.0-rc1
+spacy~=3.7.2
+firebase_admin~=6.4.0

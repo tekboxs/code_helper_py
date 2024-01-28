@@ -1,10 +1,4 @@
-""""
-Copyright © Krypton 2019-2023 - https://github.com/kkrypt0nn (https://krypton.ninja)
-Description:
-🐍 A simple template to start to code your own and personalized discord bot in Python programming language.
 
-Version: 6.1.0
-"""
 
 import discord
 from discord import app_commands
@@ -191,10 +185,11 @@ class Owner(commands.Cog, name="owner"):
     @app_commands.describe(message="The message that should be repeated by the bot")
     @commands.is_owner()
     async def say(self, context: Context, *, message: str) -> None:
-        canal = context.channel
-        mensagem_enviada = await canal.send(message)
 
+        await context.channel.send(message)
         await context.message.delete()
+
+
 
     @commands.hybrid_command(
         name="embed",
