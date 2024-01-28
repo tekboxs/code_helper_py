@@ -4,3 +4,4 @@
 **/__pycache__
 /firebase/key.json
 /.idea 
+/.vscode
