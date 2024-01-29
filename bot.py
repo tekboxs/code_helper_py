@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import os
@@ -18,7 +19,6 @@ from googletrans import Translator
 from cogs.roles import MealDropdownView, ProgrammingRoles
 from configs import Configs
 from googletrans import Translator
-from database import DatabaseManager
 import os
 import subprocess
 import spacy
@@ -126,7 +126,8 @@ configs = Configs()
 
  
 
-mencao_cooldown = commands.CooldownMapping.from_cooldown(1, 120, commands.BucketType.user)
+mencion_cooldown = commands.CooldownMapping.from_cooldown(1, 60, commands.BucketType.user)
+error_cooldown = commands.CooldownMapping.from_cooldown(1, 120, commands.BucketType.user)
 
 
 class DiscordBot(commands.Bot):
@@ -259,13 +260,20 @@ class DiscordBot(commands.Bot):
                 await message.add_reaction('<:fuba:1129443906753396847>')
 
         if bot.user.mentioned_in(message):
-            retry_after = mencao_cooldown.get_bucket(message).update_rate_limit()
+            retry_after = mencion_cooldown.get_bucket(message).update_rate_limit()
             if retry_after:
                 return
 
 
-            responses = ['Aqui que chamaram o pai?', 'Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
-                         'Mas e o bolo de fubá?', 'Quero dormir doidão', 'Me dá bolo de fubá']
+            responses = ['Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
+             'Mas e o bolo de fubá?', 'Eu vou é dormir', 'Me dá bolo de fubá',
+             'Vou nessa, como um ninja nas sombras', 'Nem a Netflix tem esse enredo',
+             'Parece uma playlist de sentimentos em 7 músicas', 'Quem disse que eu não sou um unicórnio disfarçado?',
+             'Deixa que eu resolvo isso com a força do abraço', 'Um dia eu ainda aprendo a fazer origami de pão',
+             'Vou responder isso com uma dança interpretativa', 'Você já viu um pato malabarista? Eu também não, mas seria legal',
+             'Enquanto isso, na dimensão paralela do bolo cósmico...', 'Isso me lembra da vez que um pombo me deu conselhos de vida',
+             'Se eu fosse uma cor, seria o azul do céu num dia sem nuvens', 'Um dia vou descobrir o segredo da meia que sempre some',
+             'Meu superpoder é fazer as plantas crescerem mais rápido só com o olhar', 'Sério, preciso desvendar o mistério do bolo de fubá']
             await message.reply(responses[random.randint(0, len(responses) - 1)])
 
 
@@ -278,55 +286,35 @@ class DiscordBot(commands.Bot):
         if context.guild is not None:
             self.logger.info(
                 f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id}) "
-                f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id}) "
             )
         else:
             self.logger.info(
                 f"Executed {executed_command} command by {context.author} (ID: {context.author.id}) in DMs"
             )
-
+    
+    error_users_history = {}
     async def on_command_error(self, context: Context, error) -> None:
-        if isinstance(error, commands.CommandOnCooldown):
-            minutes, seconds = divmod(error.retry_after, 60)
-            hours, minutes = divmod(minutes, 60)
-            hours = hours % 24
-            embed = discord.Embed(
-                description=f"**Please slow down** - You can use this command again in {f'{round(hours)} hours' if round(hours) > 0 else ''} {f'{round(minutes)} minutes' if round(minutes) > 0 else ''} {f'{round(seconds)} seconds' if round(seconds) > 0 else ''}.",
-                color=0xE02B2B,
-            )
-            await context.send(embed=embed)
-        elif isinstance(error, commands.NotOwner):
+        retried = error_cooldown.get_bucket(context.message).update_rate_limit()
+        if retried:
+            current_attemps = 0
+            
+            try:
+                current_attemps = self.error_users_history[context.author.id]
+            except:
+                pass
 
-            await context.send(content="Some daqui!", ephemeral=True)
+            if current_attemps > 1:
+                member = context.guild.get_member(context.author.id)
+                duration = datetime.timedelta(minutes=5)
+                await member.timeout(duration, reason='Spam de comando')
+                self.error_users_history[context.author.id] = 0
 
-            if context.guild:
-                self.logger.warning(
-                    f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the guild {context.guild.name} (ID: {context.guild.id}), but the user is not an owner of the bot."
-                )
             else:
-                self.logger.warning(
-                    f"{context.author} (ID: {context.author.id}) tried to execute an owner only command in the bot's DMs, but the user is not an owner of the bot."
-                )
-        elif isinstance(error, commands.MissingPermissions):
-
-            await context.send(content="Você não tem permissão pra isso, suma.", ephemeral=True)
-
-        elif isinstance(error, commands.BotMissingPermissions):
-            embed = discord.Embed(
-                description="Não posso fazer isso`",
-                description="Não posso fazer isso`",
-                color=0xE02B2B,
-            )
-            await context.send(embed=embed)
-        elif isinstance(error, commands.MissingRequiredArgument):
-            embed = discord.Embed(
-                title="Error!",
-                description=str(error).capitalize(),
-                color=0xE02B2B,
-            )
-            await context.send(embed=embed)
+                self.error_users_history[context.author.id] = current_attemps + 1
+                await context.send(f'Rapaz... {context.author} vo te pegar <:angry:1104539138885177374>',  )
         else:
-            raise error
+            await context.send(f'{context.author} Vamo parar de mandar comando q n pode <:frfr:1094799643696701481>',  )
+         
 
 
 load_dotenv()

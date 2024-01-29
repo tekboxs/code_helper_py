@@ -135,18 +135,3 @@ async def ticket_on_click(interaction: Interaction) -> None:
         f"📩  **|** {interaction.user.mention} ticket criado! Envie todas as informações possíveis sobre seu caso e "
         f"aguarde até que um atendente responda.")
 
-
-class TicketCog(commands.Cog, name="ticket"):
-    def __init__(self, bot) -> None:
-        self.bot = bot
-
-    @commands.hybrid_command(name="tkt-i", description="Create buttons")
-    @commands.has_role('Manager')
-    async def ticket_interactions(self, context: Context) -> None:
-        view = View()
-        view.add_item(MealButtonView(callback=ticket_on_click, label='Abrir Ticket'))
-        await context.send('asd', view=view)
-
-
-async def setup(bot) -> None:
-    await bot.add_cog(TicketCog(bot))
