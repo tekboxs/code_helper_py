@@ -9,11 +9,9 @@ class FirestoreManager:
     def __init__(self, app: App) -> None:
         self.app_firestore = firestore.client(app)
 
-    async def list_warn(self, user: str) -> list | None:
+    async def list_warn(self, user: str) -> int:
         doc_ref = self.app_firestore.collection(self.warn_collection).document(user)
-        if(doc_ref.get().exists):
-            return doc_ref.get().to_dict()['warns']
-        return []
+        return doc_ref.get().to_dict()['warns']
 
     async def remove_warn(self, warn_id: int, user: str) -> int | None:
         doc_ref = self.app_firestore.collection(self.warn_collection).document(user)
