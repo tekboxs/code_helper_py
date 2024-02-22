@@ -117,11 +117,10 @@ class Roles(commands.Cog, name="Roles"):
 
     @commands.hybrid_command(name="choose_role", description="Criar menu de cargos.")
     @commands.has_role('Manager')
-    async def choose_role(self, context: Context) -> None:
-
+    async def choose(self, context: Context) -> None:
         await context.channel.send(
             "Escolha as ferramentas que melhor representam suas habilidades",
-            view=self.setup_view(),
+            view=self.view(),
         )
         await context.send('Menu criado com sucesso ;)', ephemeral=True)
 
