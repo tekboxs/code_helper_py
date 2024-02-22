@@ -87,6 +87,8 @@ class Roles(commands.Cog, name="Roles"):
             if role in interaction.user.roles:
                 return await interaction.response.send_message("Você já possui esse cargo!", ephemeral=True)
 
+        await interaction.user.add_roles(*roles)
+        return await interaction.response.send_message(f"Cargo {[role.name for role in roles]} atribuído com sucesso!", ephemeral=True)
 
 
     @commands.hybrid_command(name="choose_role", description="Criar menu de cargos.")
