@@ -56,6 +56,22 @@ class Roles(commands.Cog, name="Roles"):
     def options(self) -> list[SelectOption]:
         return [SelectOption(label=self.prettify(name), emoji=emoji) for name, emoji in self.emojis]
 
+    @commands.has_permissions(manage_roles=True, manage_guild=True)
+    async def setup(self, interaction: Interaction) -> None:
+        for role in self.roles:
+            if role not in interaction.guild.emojis:
+                self.emojis[self.prettify(role)] = await interaction.guild.create_custom_emoji(
+                    name=role,
+                    image=self.images[role],
+                    reason="emoji for role was not found"
+                )
+
+            if role not in interaction.guild.roles:
+                self.roles[self.prettify(role)] = await interaction.guild.create_role(
+                    name=self.prettify(role),
+                    display_icon=self.emojis[role].name,
+                    reason="role for role was not found"
+                )
 
 def get_roles_options() -> list[SelectOption]:
     role_config = get_roles_list()
