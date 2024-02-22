@@ -12,13 +12,11 @@ import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 from dotenv import load_dotenv
-from cogs.roles import MealDropdownView, ProgrammingRoles
+from cogs.roles import MealDropdownView, Roles
 from configs import Configs
 from googletrans import Translator
-from cogs.roles import MealDropdownView, ProgrammingRoles
 from configs import Configs
 from googletrans import Translator
-from database import DatabaseManager
 import os
 import subprocess
 import spacy
@@ -313,7 +311,6 @@ class DiscordBot(commands.Bot):
 
         elif isinstance(error, commands.BotMissingPermissions):
             embed = discord.Embed(
-                description="Não posso fazer isso`",
                 description="Não posso fazer isso`",
                 color=0xE02B2B,
             )
