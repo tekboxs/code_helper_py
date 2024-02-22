@@ -12,15 +12,40 @@ from views.button import MealButtonView
 from views.dropdown import MealDropdownView
 
 
-def get_roles_list() -> list[dict[str:str]]:
-    json_file_path = fr"{os.path.realpath(os.path.dirname(__file__))}/role_config.json"
-    try:
-        with open(json_file_path, encoding="utf8") as file:
-            roles_list = json.load(file)['roles']
-        return roles_list
-    except FileNotFoundError:
-        print(f"Arquivo JSON não encontrado em {json_file_path}")
-        return []
+class Roles(commands.Cog, name="Roles"):
+    def __init__(self):
+        self.config: {} = None
+
+        self.images: dict[str, bytes] = {}
+        self.emojis: dict[str, Emoji] = {}
+        self.roles: dict[str, Role] = {}
+
+        asyncio.create_task(self.get_config())
+
+    async def get_config(self) -> None:
+        try:
+            path = os.path.join(os.path.realpath(os.path.dirname(__file__)), "roles_config.json")
+            with open(path, encoding="utf8") as file:
+                self.config = json.load(file)
+
+        except FileNotFoundError:
+            print(f"Arquivo JSON não encontrado em {path}")
+            return
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    "https://raw.githubusercontent.com/devicons/devicon/master/devicon.json") as response:
+                for icon in await response.json(content_type="text/plain"):
+                    if "language" in icon["tags"] and not icon["name"] in self.config["ignore"]:
+                        kind = "original"
+
+                        if icon["name"] in self.config["icon"]:
+                            kind = self.config["icon"][icon["name"]]
+
+                        async with session.get(
+                                f'https://raw.githubusercontent.com/devicons/devicon/master/icons/{icon["name"]}'
+                                f'/{icon["name"]}-{kind}.svg') as svg:
+                            self.images[icon["name"]] = bytes(await svg.text(), "UTF-8")
 
 
 def get_roles_options() -> list[SelectOption]:
