@@ -1,9 +1,13 @@
+import asyncio.tasks
 import json
 import os
+
+import aiohttp
+import discord
+from discord import SelectOption, Interaction, Emoji, Role
 from discord.ext import commands
 from discord.ext.commands import Context
-import discord
-from discord import SelectOption, Interaction
+
 from views.button import MealButtonView
 from views.dropdown import MealDropdownView
 
