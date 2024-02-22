@@ -108,6 +108,12 @@ class Roles(commands.Cog, name="Roles"):
         await interaction.user.remove_roles(*roles)
         return await interaction.response.send_message(f"Roles {[role.name for role in roles]} removidos com sucesso!")
 
+    def view(self) -> discord.ui.View:
+        return MealDropdownView(
+            custom_id_prefix="remove_role_btn",
+            options=self.options(),
+            callback=self.on_dropdown_select,
+        ).add_item(MealButtonView(callback=self.on_dropdown_remove, label="Remover"))
 
     @commands.hybrid_command(name="choose_role", description="Criar menu de cargos.")
     @commands.has_role('Manager')
