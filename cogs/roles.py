@@ -75,12 +75,19 @@ class Roles(commands.Cog, name="Roles"):
 
 def get_roles_options() -> list[SelectOption]:
     role_config = get_roles_list()
+    async def on_dropdown_select(self, interaction: Interaction) -> None:
+        roles = []
 
-    role_select_list = [SelectOption(label=item['label'], emoji=item['emoji'])
-                        for item in role_config]
+        for value in interaction.data["values"]:
+            role = self.roles[value]
 
-    return role_select_list
+            if role is None:
+                return await interaction.response.send_message("role was not found, ask an administrator to resync "
+                                                               "the guild!", ephemeral=True)
+            roles.append(role)
 
+            if role in interaction.user.roles:
+                return await interaction.response.send_message("Você já possui esse cargo!", ephemeral=True)
 
 class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
     async def on_dropdown_select(self, interaction: Interaction) -> None:
