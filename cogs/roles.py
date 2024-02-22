@@ -47,6 +47,12 @@ class Roles(commands.Cog, name="Roles"):
                                 f'/{icon["name"]}-{kind}.svg') as svg:
                             self.images[icon["name"]] = bytes(await svg.text(), "UTF-8")
 
+    def prettify(self, name: str) -> str:
+        if name in self.config.prettify:
+            return self.config.prettify[name]
+
+        return name.capitalize()
+
 
 def get_roles_options() -> list[SelectOption]:
     role_config = get_roles_list()
