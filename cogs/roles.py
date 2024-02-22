@@ -53,6 +53,9 @@ class Roles(commands.Cog, name="Roles"):
 
         return name.capitalize()
 
+    def options(self) -> list[SelectOption]:
+        return [SelectOption(label=self.prettify(name), emoji=emoji) for name, emoji in self.emojis]
+
 
 def get_roles_options() -> list[SelectOption]:
     role_config = get_roles_list()
