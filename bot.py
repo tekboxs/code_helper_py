@@ -265,15 +265,9 @@ class DiscordBot(commands.Bot):
                 return
 
 
-            responses = ['Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
-             'Mas e o bolo de fubá?', 'Eu vou é dormir', 'Me dá bolo de fubá',
-             'Vou nessa, como um ninja nas sombras', 'Nem a Netflix tem esse enredo',
-             'Parece uma playlist de sentimentos em 7 músicas', 'Quem disse que eu não sou um unicórnio disfarçado?',
-             'Deixa que eu resolvo isso com a força do abraço', 'Um dia eu ainda aprendo a fazer origami de pão',
-             'Vou responder isso com uma dança interpretativa', 'Você já viu um pato malabarista? Eu também não, mas seria legal',
-             'Enquanto isso, na dimensão paralela do bolo cósmico...', 'Isso me lembra da vez que um pombo me deu conselhos de vida',
-             'Se eu fosse uma cor, seria o azul do céu num dia sem nuvens', 'Um dia vou descobrir o segredo da meia que sempre some',
-             'Meu superpoder é fazer as plantas crescerem mais rápido só com o olhar', 'Sério, preciso desvendar o mistério do bolo de fubá']
+            responses = ['Aqui que chamaram o pai?', 'Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
+                         'Mas e o bolo de fubá?', 'Quero dormir doidão', 'Me dá bolo de fubá']
+
             await message.reply(responses[random.randint(0, len(responses) - 1)])
 
 
@@ -286,6 +280,7 @@ class DiscordBot(commands.Bot):
         if context.guild is not None:
             self.logger.info(
                 f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id}) "
+                f"Executed {executed_command} command in {context.guild.name} (ID: {context.guild.id}) by {context.author} (ID: {context.author.id}) "
             )
         else:
             self.logger.info(
@@ -294,6 +289,7 @@ class DiscordBot(commands.Bot):
     
     error_users_history = {}
     async def on_command_error(self, context: Context, error) -> None:
+ 
         retried = error_cooldown.get_bucket(context.message).update_rate_limit()
         if retried:
             current_attemps = 0
@@ -312,6 +308,7 @@ class DiscordBot(commands.Bot):
             else:
                 self.error_users_history[context.author.id] = current_attemps + 1
                 await context.send(f'Rapaz... {context.author} vo te pegar <:angry:1104539138885177374>',  )
+ 
         else:
             await context.send(f'{context.author} Vamo parar de mandar comando q n pode <:frfr:1094799643696701481>',  )
          

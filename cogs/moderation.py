@@ -70,6 +70,7 @@ class Moderacao(commands.Cog, name="moderacao"):
                            reason="A razão pela qual o usuário deve ser advertido.")
     async def advertencia_adicionar(self, context: Context, user: discord.User, *,
                                     reason: str) -> None:
+ 
         await context.interaction.response.defer()
 
         member = context.guild.get_member(user.id) or await context.guild.fetch_member(user.id)
@@ -77,6 +78,7 @@ class Moderacao(commands.Cog, name="moderacao"):
         total = await self.bot.database.add_warn(f'{user.name}-{user.id}', context.author.name, reason)
         
              
+ 
         try:
             await member.send(f"Você levou uma advertência em **{context.guild.name}**!\nMotivo: {reason}")
         except:
@@ -118,12 +120,13 @@ class Moderacao(commands.Cog, name="moderacao"):
     @app_commands.describe(amount="A quantidade de mensagens que devem ser deletadas.")
     async def limpar(self, context: Context, amount: int) -> None:
         # Comando para deletar mensagens.
+ 
         await context.channel.send(
             embed=discord.Embed(description=f"**{context.author}** Removendo **{amount}** mensagens!", color=0xBEBEFE,
                                 ))
         
         asyncio.create_task(context.channel.purge(limit=amount + 1))
-
+ 
 
 async def setup(bot) -> None:
     await bot.add_cog(Moderacao(bot))
