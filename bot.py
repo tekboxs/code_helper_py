@@ -186,7 +186,7 @@ class DiscordBot(commands.Bot):
                     else:
                         logger.warning(f'cant find {channel_id}')
 
-    @tasks.loop(hours=1)
+    @tasks.loop(hours=3)
     async def send_daily_quote(self):
         channel_id = configs.codehelp.geral
 
@@ -259,16 +259,16 @@ class DiscordBot(commands.Bot):
             if random.randint(1, 10) > 9:
                 await message.add_reaction('<:fuba:1129443906753396847>')
 
-        if bot.user.mentioned_in(message):
-            retry_after = mencion_cooldown.get_bucket(message).update_rate_limit()
-            if retry_after:
-                return
+        # if bot.user.mentioned_in(message):
+        #     retry_after = mencion_cooldown.get_bucket(message).update_rate_limit()
+        #     if retry_after:
+        #         return
 
 
-            responses = ['Aqui que chamaram o pai?', 'Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
-                         'Mas e o bolo de fubá?', 'Quero dormir doidão', 'Me dá bolo de fubá']
+            # responses = ['Aqui que chamaram o pai?', 'Chora', 'Eu sou o cara :P', 'Invejosa', 'Sai fora kk',
+            #              'Mas e o bolo de fubá?', 'Quero dormir doidão', 'Me dá bolo de fubá']
 
-            await message.reply(responses[random.randint(0, len(responses) - 1)])
+            # await message.reply(responses[random.randint(0, len(responses) - 1)])
 
 
         await self.process_commands(message)
@@ -307,10 +307,11 @@ class DiscordBot(commands.Bot):
 
             else:
                 self.error_users_history[context.author.id] = current_attemps + 1
-                await context.send(f'Rapaz... {context.author} vo te pegar <:angry:1104539138885177374>',  )
+                # await context.send(f'Rapaz... {context.author} vo te pegar <:angry:1104539138885177374>',  )
  
         else:
-            await context.send(f'{context.author} Vamo parar de mandar comando q n pode <:frfr:1094799643696701481>',  )
+            pass
+            # await context.send(f'{context.author} Vamo parar de mandar comando q n pode <:frfr:1094799643696701481>',  )
          
 
 
