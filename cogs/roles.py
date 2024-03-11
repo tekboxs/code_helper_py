@@ -128,4 +128,4 @@ class Roles(commands.Cog, name="Roles"):
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Roles())
 
-    bot.add_view(Roles().view())
+    bot.add_view(Roles().view(None))
