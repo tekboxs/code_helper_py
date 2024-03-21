@@ -5,7 +5,9 @@ o Code help é feito com python, uma linguagem moderna e poderosa. se você já 
 ### 👷 Requerimentos
 
 > python instalado
+
 > um token de bot pessoal
+
 > um servidor para testes
 
 ### 🧹 Preparando o ambiente
