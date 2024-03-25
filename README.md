@@ -10,6 +10,10 @@ o Code help é feito com python, uma linguagem moderna e poderosa. se você já 
 
 > um servidor para testes
 
+> um projeto firebase
+
+> conta de seriço no firebase
+
 ### 🧹 Preparando o ambiente
 
 Clone o projeto 
