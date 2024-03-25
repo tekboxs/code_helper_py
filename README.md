@@ -12,7 +12,7 @@ o Code help é feito com python, uma linguagem moderna e poderosa. se você já 
 
 > um projeto firebase
 
-> conta de seriço no firebase
+> conta de serviço no firebase
 
 ### 🧹 Preparando o ambiente
 
