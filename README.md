@@ -18,7 +18,7 @@ o Code help é feito com python, uma linguagem moderna e poderosa. se você já 
 
 Clone o projeto 
 ```bash
-git clone -b main https://github.com/tekboxs/code_helper_py.git
+git clone -b mudanças-de-fuba https://github.com/tekboxs/code_helper_py.git
 ```
 Crie um Venv
 Crie um arquivo .env no mesmo nivel do arquivo bot.py
