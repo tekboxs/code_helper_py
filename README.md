@@ -27,4 +27,6 @@ Insira o token do seu bot dessa forma:
 ```bash
 TOKEN=SEU TOKEN
 ```
+Insira o json da conta de serviço em /firebase/ com o nome "key.json" para habilitar o serviço
+
 Visite a parte de Issues para verificar a melhor ordem e problemas que podem ser resolvidos e ajude a code a help a se tornar melhor!
