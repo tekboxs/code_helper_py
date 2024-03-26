@@ -19,7 +19,7 @@ class BoostersRoles(commands.Cog, name="boosters"):
     @commands.has_role('Manager')
     async def send_booster_roles(self, context: Context) -> None:
         """
-        This commands sends a message with boosters dropdown roles
+        This commands sends a message with boosters dropdown booster_roles
 
         :param context: The application command context.
         """
@@ -35,7 +35,7 @@ async def setup(bot: commands.Bot) -> None:
 
 
 def get_role_list():
-    booster_roles_json_path = f"{os.path.dirname(__file__)}/../resources/roles/boosters.json"
+    booster_roles_json_path = f"{os.path.dirname(__file__)}/../resources/booster_roles/boosters.json"
 
     try:
         with open(booster_roles_json_path, encoding="utf8") as file:
