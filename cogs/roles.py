@@ -6,13 +6,18 @@ import discord
 from discord import SelectOption, Interaction
 from views.button import MealButtonView
 from views.dropdown import MealDropdownView
+import aiohttp
+import aspose.words as aw
+import base64
+import io
 
-
-def get_roles_list() -> list[dict[str:str]]:
-    json_file_path = fr"{os.path.realpath(os.path.dirname(__file__))}/role_config.json"
+def get_roles_list() -> dict:
+    current_dir = os.path.dirname(__file__)
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+    json_file_path = os.path.join(parent_dir, r"resources/roles/roles_config.json")
     try:
         with open(json_file_path, encoding="utf8") as file:
-            roles_list = json.load(file)['roles']
+            roles_list = json.load(file)
         return roles_list
     except FileNotFoundError:
         print(f"Arquivo JSON não encontrado em {json_file_path}")
@@ -22,8 +27,8 @@ def get_roles_list() -> list[dict[str:str]]:
 def get_roles_options() -> list[SelectOption]:
     role_config = get_roles_list()
 
-    role_select_list = [SelectOption(label=item['label'], emoji=item['emoji'])
-                        for item in role_config]
+    role_select_list = [SelectOption(label=role_config[key], emoji=key)
+                        for key in role_config.keys()]
 
     return role_select_list
 
@@ -31,7 +36,7 @@ def get_roles_options() -> list[SelectOption]:
 class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
     async def on_dropdown_select(self, interaction: Interaction) -> None:
         guild = interaction.guild
-        role_name = f"{interaction.data['values'][0]} Dev"
+        role_name = f"{str(interaction.data['values'][0]).capitalize()}"
         role = discord.utils.get(guild.roles, name=role_name)
 
         if not role:
@@ -55,7 +60,7 @@ class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
         member = interaction.user
 
         if roles_list and member:
-            roles_to_remove = [f"{role['label']} Dev" for role in roles_list]
+            roles_to_remove = [str(role).capitalize() for role in roles_list.keys()]
             roles_to_remove = [discord.utils.get(
                 interaction.guild.roles, name=role_name) for role_name in roles_to_remove]
             roles_to_remove = [
@@ -72,26 +77,34 @@ class ProgrammingRoles(commands.Cog, name="ProgrammingRoles"):
 
     def setup_view(self) -> discord.ui.View:
         role_view = MealDropdownView(
-            custom_id_prefix='remove_role_btn',
+            custom_id_prefix='roles_dropwdown_prog',
             options=get_roles_options(),
             callback=self.on_dropdown_select
         )
 
-        role_view.add_item(MealButtonView(callback=self.on_remove_button, label='Remover'))
+        role_view.add_item(MealButtonView(
+            custom_id='remove_role_drop',
+            callback=self.on_remove_button, label='Remover'))
         return role_view
 
-    @commands.hybrid_command(name="choose_role", description="Criar menu de cargos.")
+    @commands.hybrid_command(name="choose_role", description="Criar menu de cargos. programação")
     @commands.has_role('Manager')
     async def choose_role(self, context: Context) -> None:
-
-        await context.channel.send(
-            "Escolha as ferramentas que melhor representam suas habilidades",
-            view=self.setup_view(),
-        )
-        await context.send('Menu criado com sucesso ;)', ephemeral=True)
+        try:
+            await context.channel.send(
+                "Escolha as ferramentas que melhor representam suas habilidades",
+                view=self.setup_view(),
+            )
+            await context.send('Menu criado com sucesso ;)', ephemeral=True)
+        except Exception as e:
+            roles = get_roles_list()
+            await context.send(f"{str(e)} {[f'{i} - {item} : {roles[item]}' for i, item in enumerate(roles.keys())]}",
+                               ephemeral=True)
 
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(ProgrammingRoles())
 
     bot.add_view(ProgrammingRoles().setup_view())
+
+ 
