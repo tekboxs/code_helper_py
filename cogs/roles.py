@@ -4,7 +4,8 @@ import os
 
 import aiohttp
 import discord
-from discord import SelectOption, Interaction, Emoji, Role
+import pyvips
+from discord import SelectOption, Interaction, Emoji, Role, Guild
 from discord.ext import commands
 from discord.ext.commands import Context
 
