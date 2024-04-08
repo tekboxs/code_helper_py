@@ -119,22 +119,9 @@ class Roles(commands.Cog, name="Roles"):
         return await interaction.response.send_message(f"Cargo ${role.name} atribuído com sucesso!", ephemeral=True)
 
     async def on_dropdown_remove(self, interaction: Interaction) -> None:
-        roles = []
-
-        for value in interaction.data["values"]:
-            role = self.roles[value]
-
-            if role is None:
-                return await interaction.response.send_message("role was not found, ask an administrator to resync "
-                                                               "the guild!", ephemeral=True)
-            roles.append(role)
-
-            if role not in interaction.user.roles:
-                return await interaction.response.send_message(f"you do not have the role {role.name} to be removed!",
-                                                               ephemeral=True)
-
-        await interaction.user.remove_roles(*roles)
-        return await interaction.response.send_message(f"Roles {[role.name for role in roles]} removidos com sucesso!")
+        await interaction.user.remove_roles(*[discord.utils.get(
+            interaction.guild.roles, name=self.prettify(name)) for name in self.images])
+        return await interaction.response.send_message(f"Cargos removidos com sucesso!", ephemeral=True)
 
     def view(self) -> discord.ui.View:
         return MealDropdownView(
