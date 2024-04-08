@@ -130,14 +130,15 @@ class Roles(commands.Cog, name="Roles"):
             callback=self.on_dropdown_select,
         ).add_item(MealButtonView(callback=self.on_dropdown_remove, label="Remover"))
 
-    @commands.hybrid_command(name="choose_role", description="Criar menu de cargos.")
-    @commands.has_role('Manager')
+    @commands.hybrid_command(name="choose_roles", description="Criar menu de cargos.")
+    @commands.has_role("Manager")
     async def choose(self, context: Context) -> None:
         await context.channel.send(
             "Escolha as ferramentas que melhor representam suas habilidades",
-            view=self.view(),
+            view=self.view(context.guild),
         )
-        await context.send('Menu criado com sucesso ;)', ephemeral=True)
+        await context.channel.send('Menu criado com sucesso ;)', )
+
 
 
 async def setup(bot: commands.Bot) -> None:
