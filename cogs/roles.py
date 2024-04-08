@@ -85,14 +85,26 @@ class Roles(commands.Cog, name="Roles"):
             emoji=discord.utils.get(guild.emojis, name=name)
         ) for name in self.images]
 
+    async def setup(self, context: Context) -> None:
+        for name in self.images:
+            emoji = discord.utils.get(context.guild.emojis, name=name)
+
+            if emoji is None:
+                emoji = await context.guild.create_custom_emoji(
+                    name=self.add_pl(name),
+                    image=self.images[name],
                     reason="emoji for role was not found"
                 )
 
-            if role not in interaction.guild.roles:
-                self.roles[self.prettify(role)] = await interaction.guild.create_role(
-                    name=self.prettify(role),
-                    display_icon=self.emojis[role].name,
-                    reason="role for role was not found"
+            emoji_name = None
+            if context.guild.premium_tier >= 1:
+                emoji_name = emoji.name
+
+            if discord.utils.get(context.guild.roles, name=name) is None:
+                await context.guild.create_role(
+                    name=self.prettify(name),
+                    display_icon=emoji_name,
+                    reason="role was not found"
                 )
 
     async def on_dropdown_select(self, interaction: Interaction) -> None:
