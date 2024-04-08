@@ -123,10 +123,10 @@ class Roles(commands.Cog, name="Roles"):
             interaction.guild.roles, name=self.prettify(name)) for name in self.images])
         return await interaction.response.send_message(f"Cargos removidos com sucesso!", ephemeral=True)
 
-    def view(self) -> discord.ui.View:
+    def view(self, guild: Guild) -> discord.ui.View:
         return MealDropdownView(
             custom_id_prefix="remove_role_btn",
-            options=self.options(),
+            options=self.options(guild),
             callback=self.on_dropdown_select,
         ).add_item(MealButtonView(callback=self.on_dropdown_remove, label="Remover"))
 
