@@ -73,7 +73,11 @@ class Roles(commands.Cog, name="Roles"):
 
         return name.capitalize()
 
+    def add_pl(self, name: str) -> str:
+        if len(name) == 1:
+            name += "pl"
 
+        return name
 
     def options(self, guild: Guild) -> list[SelectOption]:
         return [SelectOption(
