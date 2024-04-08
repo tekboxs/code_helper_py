@@ -139,6 +139,12 @@ class Roles(commands.Cog, name="Roles"):
         )
         await context.channel.send('Menu criado com sucesso ;)', )
 
+    @commands.hybrid_command("sync_roles", description="synchronize roles in the guild.")
+    @commands.has_role("Manager")
+    async def sync(self, context: Context) -> None:
+        await self.setup(context)
+        await context.channel.send(f"Roles {self.images.keys()} synchronized.")
+
 
 
 async def setup(bot: commands.Bot) -> None:
