@@ -1,8 +1,12 @@
 {
-  "ignore": [],
+  "ignore": ["awk", "graphql", "---", "aarch64", "antdesign", "apl", "bun", "carbon", "ceylon", "clarity", "clojure", "clojurescript", "coffeescript", "embeddedc", "groovy", "haxe", "jetpackcompose", "jule", "jupyter", "labview", "markdown", "matlab", "mysql", "nodejs", "objectivec", "ocaml", "ohmyzsh", "opencl", "prolog", "rect", "sequelize", "solidity", "unifiedmodelinglanguage", "vala", "vyper", "xml", "yaml"],
   "prettify": {
-    "javascript": "JavaScript"
+    "php": "PHP",
+    "css3": "CSS",
+    "html5": ""
   },
-  "icon":{},
+  "icon":{
+    "objectivec": "plain"
+  },
   "colors": {}
 }
