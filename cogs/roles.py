@@ -43,7 +43,17 @@ class Roles(commands.Cog, name="Roles"):
                         async with session.get(
                                 f'https://raw.githubusercontent.com/devicons/devicon/master/icons/{icon["name"]}'
                                 f'/{icon["name"]}-{kind}.svg') as svg:
-                            self.images[icon["name"]] = bytes(await svg.text(), "UTF-8")
+                            if svg.status != 200:
+                                print("returned",
+                                      f'https://raw.githubusercontent.com/devicons/devicon/master/icons/{icon["name"]}'
+                                      f'/{icon["name"]}-{kind}.svg')
+                                return
+
+                            self.images[icon["name"]] = pyvips.Image.new_from_buffer(
+                                bytes(await svg.text(), "UTF-8"),
+                                "",
+                                access="sequential"
+                            ).write_to_buffer(".png")
 
     def prettify(self, name: str) -> str:
         if name in self.config.prettify:
