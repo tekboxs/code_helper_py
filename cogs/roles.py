@@ -16,10 +16,7 @@ from views.dropdown import MealDropdownView
 class Roles(commands.Cog, name="Roles"):
     def __init__(self):
         self.config: {} = None
-
         self.images: dict[str, bytes] = {}
-        self.emojis: dict[str, Emoji] = {}
-        self.roles: dict[str, Role] = {}
 
         asyncio.create_task(self.get_config())
 
