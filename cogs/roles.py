@@ -108,21 +108,15 @@ class Roles(commands.Cog, name="Roles"):
                 )
 
     async def on_dropdown_select(self, interaction: Interaction) -> None:
-        roles = []
+        role = discord.utils.get(interaction.guild.roles, name=interaction.data["values"][0])
+        if role is None:
+            return await interaction.response.send_message("role was not found, ask an administrator to resync "
+                                                           "the guild!", ephemeral=True)
+        if role in interaction.user.roles:
+            return await interaction.response.send_message("Você já possui esse cargo!", ephemeral=True)
 
-        for value in interaction.data["values"]:
-            role = self.roles[value]
-
-            if role is None:
-                return await interaction.response.send_message("role was not found, ask an administrator to resync "
-                                                               "the guild!", ephemeral=True)
-            roles.append(role)
-
-            if role in interaction.user.roles:
-                return await interaction.response.send_message("Você já possui esse cargo!", ephemeral=True)
-
-        await interaction.user.add_roles(*roles)
-        return await interaction.response.send_message(f"Cargo {[role.name for role in roles]} atribuído com sucesso!", ephemeral=True)
+        await interaction.user.add_roles(role)
+        return await interaction.response.send_message(f"Cargo ${role.name} atribuído com sucesso!", ephemeral=True)
 
     async def on_dropdown_remove(self, interaction: Interaction) -> None:
         roles = []
