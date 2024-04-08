@@ -56,8 +56,20 @@ class Roles(commands.Cog, name="Roles"):
                             ).write_to_buffer(".png")
 
     def prettify(self, name: str) -> str:
-        if name in self.config.prettify:
-            return self.config.prettify[name]
+        if name in self.config["prettify"]:
+            return self.config["prettify"][name]
+        else:
+            try:
+                i = name.rindex("sharp")
+                return name.capitalize()[:i] + "#"
+            except ValueError:
+                pass
+
+            try:
+                i = name.rindex("script")
+                return name.capitalize()[:i] + "Script"
+            except ValueError:
+                pass
 
         return name.capitalize()
 
