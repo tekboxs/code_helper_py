@@ -145,6 +145,17 @@ class Roles(commands.Cog, name="Roles"):
         await self.setup(context)
         await context.channel.send(f"Roles {self.images.keys()} synchronized.")
 
+    @commands.hybrid_command("unsync_roles", description="synchronize roles in the guild.")
+    @commands.has_role("Manager")
+    async def unsync(self, context: Context) -> None:
+        for emoji in context.guild.emojis:
+            if emoji is None:
+                continue
+            await emoji.delete()
+
+        for role in context.guild.roles:
+            if not role.is_default():
+                await role.delete()
 
 
 async def setup(bot: commands.Bot) -> None:
