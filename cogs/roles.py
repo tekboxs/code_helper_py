@@ -73,16 +73,14 @@ class Roles(commands.Cog, name="Roles"):
 
         return name.capitalize()
 
-    def options(self) -> list[SelectOption]:
-        return [SelectOption(label=self.prettify(name), emoji=emoji) for name, emoji in self.emojis]
 
-    @commands.has_permissions(manage_roles=True, manage_guild=True)
-    async def setup(self, interaction: Interaction) -> None:
-        for role in self.roles:
-            if role not in interaction.guild.emojis:
-                self.emojis[self.prettify(role)] = await interaction.guild.create_custom_emoji(
-                    name=role,
-                    image=self.images[role],
+
+    def options(self, guild: Guild) -> list[SelectOption]:
+        return [SelectOption(
+            label=self.prettify(name),
+            emoji=discord.utils.get(guild.emojis, name=name)
+        ) for name in self.images]
+
                     reason="emoji for role was not found"
                 )
 
